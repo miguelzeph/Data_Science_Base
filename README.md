@@ -1,3 +1,3 @@
 # Data_Science_Python_GIT
 
-Materiais Absorvedores de Radiação Eletromagnética
+Data science studies and INPE projects. Some applications of absorbent material models published in the literature.
