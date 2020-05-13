@@ -21,7 +21,7 @@ y2 = [float(line.split(',')[2]) for line in lines[1:]]
 
 #plt.plot(x,y,'o')
 
-a = 10000
+a = 100
 xo = 200
 sigma = 10
 
