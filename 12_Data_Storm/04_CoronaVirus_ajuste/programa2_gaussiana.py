@@ -5,13 +5,21 @@ import scipy.integrate as si
 from matplotlib.widgets import Slider, Button, RadioButtons
 #from matplotlib.ticker import MultipleLocator
 import os
+import sys
 
+
+name = sys.argv #Nome do País colocado no Terminal
+
+if len(name) == 2:
+	name = name[1] # País com 1 nome. ex: Brazil
+if len(name) == 3:
+	name = "%s %s"%(name[1],name[2]) # País com dois nomes. ex: United Kingdom
 
 
 def gauss(x,a,x0,sigma):
     return a*np.exp(-(x-x0)**2/(2*sigma**2))
 
-arq = open('./dados.txt','r')
+arq = open('./dados/dados_%s.txt'%(name),'r')
 lines = arq.readlines()
 arq.close()
 
@@ -43,9 +51,9 @@ g1, =plt.plot(X,Y,'--b',linewidth=2)
 g2, =plt.plot(X,Y,'--b',linewidth=2)
 g, =plt.plot(X,Y,'-g',linewidth=3,label="Accumulated")
 
-plt.title("Cases of Covid-19 in 2020")
+plt.title("%s - Covid-19 Cases - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
-plt.ylabel("Cases Confirmed")
+plt.ylabel("Confirmed Cases")
 
 #plt.xlim(0,40)
 plt.xticks(np.arange(0, days, step=30))
@@ -59,7 +67,7 @@ d1, =plt.plot(X,Y,'--b',linewidth=2)
 d2, =plt.plot(X,Y,'--b',linewidth=2)
 d, =plt.plot(X,Y,'-g',linewidth=3,label="Accumulated")
 
-plt.title("Deaths of Covid-19 in 2020")
+plt.title("%s Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
 plt.ylabel("Deaths")
 
@@ -127,17 +135,11 @@ sigma4_ = plt.axes([0.60, 0.05, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra
 sigma4bar= Slider(sigma4_, "sigma4", sigmai, sigmaf, valinit=sigma)
 
 
-#-------------------------------------------------------------------------------------------------------
+#Textos
+infectados = plt.text(0.05, 0.95, "total_infected (predict) = %.2f"%(sum(y1)), fontsize=12, transform=plt.gcf().transFigure)
+mortes = plt.text(0.60, 0.95, "total_deaths (predict) = %.2f"%(sum(y2)), fontsize=12, transform=plt.gcf().transFigure) 
+func_text = plt.text(0.35, 0.95, "function: Gauss", fontsize=10, transform=plt.gcf().transFigure)
 
-"""
-# ---------Barra Resete-----------------------------------------------
-resetax = plt.axes([0.8, 0.15, 0.1, 0.04])
-buttonreset = Button(resetax, 'Reset', color=axcolor, hovercolor='0.975')
-#---------------------------------------------------------------------
-savex = plt.axes([0.5, 0.15, 0.1, 0.04])
-buttonsave = Button(savex, 'Save', color=axcolor, hovercolor='0.975')
-
-"""
 
 def update(val):#este val nao tem nada a ver com ...
 
@@ -191,6 +193,11 @@ def update(val):#este val nao tem nada a ver com ...
 	d2.set_ydata(D2)
 	d.set_ydata(D)
 
+
+	#Texto
+	infectados.set_text("total_infected (predict) = %.2f"%sum(G))
+	mortes.set_text("total_deaths (predict) = %.2f"%sum(D))
+
 	#Alterar Gráfico
 	plt.draw()
 
@@ -211,27 +218,4 @@ xo4bar.on_changed(update)
 sigma4bar.on_changed(update)
 
 plt.show()
-"""
-def reset(event):
-	dbar.reset()
-	erbar.reset()
-	eibar.reset()
-	urbar.reset()
-	uibar.reset()
-"""
 
-"""
-def save(event):
-	#PARA DAR CERTO, TIVE QUE COLOCAR OS VALORES COMO GLOBAL NA FUNÇÃO DE CÁLCULO	
-	new = open("./amostra"+str(round(d/1e-3,2))+".txt", 'w')
-	new.write("Freq\tRL\te'\te''\tu'\tu''\n")
-	
-	for i in range(0,len(F_grafic)):
-		escrever = "%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n"%(F_grafic[i],S11[i],e.real,e.imag,u.real,u.imag)
-		new.write(escrever)
-	new.close()
-
-
-buttonreset.on_clicked(reset)
-buttonsave.on_clicked(save)
-"""

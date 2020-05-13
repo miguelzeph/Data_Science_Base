@@ -5,6 +5,17 @@ import scipy.integrate as si
 from matplotlib.widgets import Slider, Button, RadioButtons
 #from matplotlib.ticker import MultipleLocator
 import os
+import sys
+
+
+name = sys.argv #Nome do País colocado no Terminal
+
+if len(name) == 2:
+	name = name[1] # País com 1 nome. ex: Brazil
+if len(name) == 3:
+	name = "%s %s"%(name[1],name[2]) # País com dois nomes. ex: United Kingdom
+
+
 
 def func(x,a,pop,A):
 	"""
@@ -19,7 +30,7 @@ def func(x,a,pop,A):
 	return novos_casos
 
 
-arq = open('./dados.txt','r')
+arq = open('./dados/dados_Brazil.txt','r')
 lines = arq.readlines()
 arq.close()
 
@@ -42,18 +53,17 @@ Y = func(X,a,2000000,10)
 #plt.plot(X,Y)
 
 #plt.show()
-
 #------------------------GRAFICO--------------------
 ax1=plt.subplot(121)
 plt.subplots_adjust(left=0.1, bottom=0.3)
 k, =plt.plot(x,y1,'or',linewidth=2,label="New_cases")
 g1, =plt.plot(X,Y,'--b',linewidth=2)
 g2, =plt.plot(X,Y,'--b',linewidth=2)
-g, =plt.plot(X,Y,'-g',linewidth=3,label="Accumulated")
+g, =plt.plot(X,Y,'-g',linewidth=3,label=r"Accumulated")
 
-plt.title("Cases of Covid-19 in 2020")
+plt.title("%s - Covid-19 Cases - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
-plt.ylabel("Cases Confirmed")
+plt.ylabel("Confirmed Cases")
 
 #plt.xlim(0,40)
 plt.xticks(np.arange(0, days, step=30))
@@ -65,9 +75,9 @@ plt.subplots_adjust(left=0.1, bottom=0.3)
 l, =plt.plot(x,y2,'or',linewidth=2,label="New_deaths")
 d1, =plt.plot(X,Y,'--b',linewidth=2)
 d2, =plt.plot(X,Y,'--b',linewidth=2)
-d, =plt.plot(X,Y,'-g',linewidth=3,label="Accumulated")
+d, =plt.plot(X,Y,'-g',linewidth=3,label=r"Accumulated")
 
-plt.title("Deaths of Covid-19 in 2020")
+plt.title("%s Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
 plt.ylabel("Deaths")
 
@@ -77,9 +87,10 @@ plt.legend()
 plt.grid(True)
 
 
-#Menor RL
-infectados = plt.text(0.05, 0.95, "total_infectadas = %.2f"%(sum(y1)), fontsize=10, transform=plt.gcf().transFigure)
-mortes = plt.text(0.60, 0.95, "total_mortes = %.2f"%(sum(y2)), fontsize=10, transform=plt.gcf().transFigure) 
+#Textos
+infectados = plt.text(0.05, 0.95, "total_infected (predict) = %.2f"%(sum(y1)), fontsize=12, transform=plt.gcf().transFigure)
+mortes = plt.text(0.60, 0.95, "total_deaths (predict) = %.2f"%(sum(y2)), fontsize=12, transform=plt.gcf().transFigure) 
+func_text = plt.text(0.35, 0.95, r"$I = e^{a.x}$,$pos=\frac{pop}{infected}$, f(x)=$A*I*e^{-\frac{1}{pos}}$", fontsize=10, transform=plt.gcf().transFigure)
 
 
 #---------------------------------------barra interativa----------------------------------------------
@@ -112,13 +123,13 @@ a3_ = plt.axes([0.60, 0.20, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),po
 a3bar= Slider(a3_, 'a3', ai, af, valinit=a, valfmt='%.2e')
 
 A3_ = plt.axes([0.60, 0.17, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
-A3bar= Slider(A3_, "A3", Ai, Af, valinit=Af/2)
+A3bar= Slider(A3_, "A3", Ai/4, Af/4, valinit=Af/2)
 
 a4_ = plt.axes([0.60, 0.11, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
 a4bar= Slider(a4_, 'a4', ai, af, valinit=a, valfmt='%.2e')
 
 A4_ = plt.axes([0.60, 0.08, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
-A4bar= Slider(A4_, "A4", Ai, Af, valinit=Af/2)
+A4bar= Slider(A4_, "A4", Ai/4, Af/4, valinit=Af/2)
 
 
 def update(val):#este val nao tem nada a ver com ...
@@ -174,8 +185,8 @@ def update(val):#este val nao tem nada a ver com ...
 	d2.set_ydata(D2)
 	d.set_ydata(D)
 
-	infectados.set_text("total_pessoas_infectadas = %.2f"%sum(G))
-	mortes.set_text("total_pessoas_mortas = %.2f"%sum(D))
+	infectados.set_text("total_infected (predict) = %.2f"%sum(G))
+	mortes.set_text("total_deaths (predict) = %.2f"%sum(D))
 
 	#Alterar Gráfico
 	plt.draw()
