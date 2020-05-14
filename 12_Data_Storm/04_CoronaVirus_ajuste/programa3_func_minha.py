@@ -30,7 +30,7 @@ def func(x,a,pop,A):
 	return novos_casos
 
 
-arq = open('./dados/dados_Brazil.txt','r')
+arq = open('./dados/dados_%s.txt'%name,'r')
 lines = arq.readlines()
 arq.close()
 
@@ -77,7 +77,7 @@ d1, =plt.plot(X,Y,'--b',linewidth=2)
 d2, =plt.plot(X,Y,'--b',linewidth=2)
 d, =plt.plot(X,Y,'-g',linewidth=3,label=r"Accumulated")
 
-plt.title("%s Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
+plt.title("%s - Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
 plt.ylabel("Deaths")
 
@@ -99,7 +99,7 @@ axcolor=(0.5,0.7,0.7)
 
 #Func nova
 ai = 1e-6
-af = 1e-1
+af = 1
 Ai = 1e-2
 Af = 100
 

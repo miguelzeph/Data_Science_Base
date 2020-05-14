@@ -67,7 +67,7 @@ d1, =plt.plot(X,Y,'--b',linewidth=2)
 d2, =plt.plot(X,Y,'--b',linewidth=2)
 d, =plt.plot(X,Y,'-g',linewidth=3,label="Accumulated")
 
-plt.title("%s Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
+plt.title("%s - Covid-19 Deaths - 31/12/19 to 12/05/20"%name)
 plt.xlabel('day')
 plt.ylabel("Deaths")
 
@@ -84,7 +84,7 @@ plt.grid(True)
 #---------------------------------------barra interativa----------------------------------------------
 axcolor=(0.5,0.7,0.7)
 
-ai = 1e-8
+ai = 0.01
 af = 1e5
 
 xoi = 0
@@ -116,7 +116,7 @@ sigma2bar= Slider(sigma2_, "sigma2", sigmai, sigmaf, valinit=sigma)
 
 # Barras Mortes
 a3_ = plt.axes([0.60, 0.20, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
-a3bar= Slider(a3_, 'a3', ai, af, valinit=a, valfmt='%.2e')
+a3bar= Slider(a3_, 'a3', ai, af/10, valinit=a, valfmt='%.2e')
 
 xo3_ = plt.axes([0.60, 0.17, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
 xo3bar= Slider(xo3_, "Xo3", xoi, xof, valinit=xo)
@@ -126,7 +126,7 @@ sigma3bar= Slider(sigma3_, "sigma3", sigmai, sigmaf, valinit=sigma)
 
 
 a4_ = plt.axes([0.60, 0.11, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
-a4bar= Slider(a4_, 'a4', ai, af, valinit=a, valfmt='%.2e')
+a4bar= Slider(a4_, 'a4', ai, af/10, valinit=a, valfmt='%.2e')
 
 xo4_ = plt.axes([0.60, 0.08, 0.20, 0.03], facecolor=axcolor) #(pos(x da barra),pos(y da barra),comprimento,largura)
 xo4bar= Slider(xo4_, "Xo4", xoi, xof, valinit=xo)
@@ -183,7 +183,7 @@ def update(val):#este val nao tem nada a ver com ...
 		D1.append(float(gauss3))
 		gauss4 = gauss(x,a4,xo4,sigma4) 
 		D2.append(float(gauss4))
- 		D.append(gauss3+gauss4)
+		D.append(gauss3+gauss4)
 	
 	g1.set_ydata(G1)
 	g2.set_ydata(G2)
