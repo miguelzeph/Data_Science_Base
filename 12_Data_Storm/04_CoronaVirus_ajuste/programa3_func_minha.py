@@ -29,6 +29,11 @@ def func(x,a,pop,A):
 	novos_casos = A*infectados*np.exp(-1/possibilidade)
 	return novos_casos
 
+def RMSE(y,y_pred):
+	y = np.array(y)
+	y_pred = np.array(y_pred[:len(y)])#Para pegar até os dados que temos de infectados
+	return np.sqrt(sum(y-y_pred)**2/len(y))
+
 
 arq = open('./dados/dados_%s.txt'%name,'r')
 lines = arq.readlines()
@@ -38,22 +43,16 @@ x = [float(line.split(',')[0]) for line in lines[1:]]
 y1 = [float(line.split(',')[1]) for line in lines[1:]]
 y2 = [float(line.split(',')[2]) for line in lines[1:]]
 
-#plt.plot(x,y,'o')
-
-a = 100
 
 
-
+a = 0.001
 
 days = 365
 
 X = np.arange(0,days)
 Y = func(X,a,2000000,10)
 
-#plt.plot(X,Y)
-
-#plt.show()
-#------------------------GRAFICO--------------------
+#-------------GRAFICO--------------------
 ax1=plt.subplot(121)
 plt.subplots_adjust(left=0.1, bottom=0.3)
 k, =plt.plot(x,y1,'or',linewidth=2,label="New_cases")
@@ -89,7 +88,11 @@ plt.grid(True)
 
 #Textos
 infectados = plt.text(0.05, 0.95, "total_infected (predict) = %.2f"%(sum(y1)), fontsize=12, transform=plt.gcf().transFigure)
+infectados_RMSE = plt.text(0.05, 0.93, "RMSE_inf = %.2f"%(0), fontsize=12, transform=plt.gcf().transFigure)
+
 mortes = plt.text(0.60, 0.95, "total_deaths (predict) = %.2f"%(sum(y2)), fontsize=12, transform=plt.gcf().transFigure) 
+mortes_RMSE = plt.text(0.60, 0.93, "RMSE_dea = %.2f"%(0), fontsize=12, transform=plt.gcf().transFigure)
+
 func_text = plt.text(0.35, 0.95, r"$I = e^{a.x}$,$pos=\frac{pop}{infected}$, f(x)=$A*I*e^{-\frac{1}{pos}}$", fontsize=10, transform=plt.gcf().transFigure)
 
 
@@ -176,6 +179,10 @@ def update(val):#este val nao tem nada a ver com ...
 		f4 = func(x,a4,200000000,A4)#Função nova
 		D2.append(float(f4))
  		D.append(f3+f4)
+
+	#Error
+	RMSE_inf = RMSE(y1,G)
+	RMSE_dea = RMSE(y2,D)
 	
 	g1.set_ydata(G1)
 	g2.set_ydata(G2)
@@ -184,9 +191,15 @@ def update(val):#este val nao tem nada a ver com ...
 	d1.set_ydata(D1)
 	d2.set_ydata(D2)
 	d.set_ydata(D)
+	
 
+	#Texto Predict
 	infectados.set_text("total_infected (predict) = %.2f"%sum(G))
 	mortes.set_text("total_deaths (predict) = %.2f"%sum(D))
+
+	#Texto Error
+	infectados_RMSE.set_text("RMSE_dea = %.2f"%(RMSE_inf))
+	mortes_RMSE.set_text("RMSE_dea = %.2f"%(RMSE_dea))
 
 	#Alterar Gráfico
 	plt.draw()

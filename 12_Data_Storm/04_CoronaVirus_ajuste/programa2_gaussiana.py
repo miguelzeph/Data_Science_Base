@@ -19,6 +19,11 @@ if len(name) == 3:
 def gauss(x,a,x0,sigma):
     return a*np.exp(-(x-x0)**2/(2*sigma**2))
 
+def RMSE(y,y_pred):
+	y = np.array(y)
+	y_pred = np.array(y_pred[:len(y)])#Para pegar até os dados que temos de infectados
+	return np.sqrt(sum(y-y_pred)**2/len(y))
+
 arq = open('./dados/dados_%s.txt'%(name),'r')
 lines = arq.readlines()
 arq.close()
@@ -27,9 +32,8 @@ x = [float(line.split(',')[0]) for line in lines[1:]]
 y1 = [float(line.split(',')[1]) for line in lines[1:]]
 y2 = [float(line.split(',')[2]) for line in lines[1:]]
 
-#plt.plot(x,y,'o')
 
-a = 100
+a = 1
 xo = 200
 sigma = 10
 
@@ -39,9 +43,11 @@ days = 365
 X = np.arange(0,days)
 Y = gauss(X,a,xo,sigma)
 
-#plt.plot(X,Y)
+RMSE_inf = RMSE(y1,Y)
+RMSE_dea = RMSE(y2,Y)
 
-#plt.show()
+
+
 
 #------------------------GRAFICO--------------------
 ax1=plt.subplot(121)
@@ -84,7 +90,7 @@ plt.grid(True)
 #---------------------------------------barra interativa----------------------------------------------
 axcolor=(0.5,0.7,0.7)
 
-ai = 0.01
+ai = 100
 af = 1e5
 
 xoi = 0
@@ -137,7 +143,11 @@ sigma4bar= Slider(sigma4_, "sigma4", sigmai, sigmaf, valinit=sigma)
 
 #Textos
 infectados = plt.text(0.05, 0.95, "total_infected (predict) = %.2f"%(sum(y1)), fontsize=12, transform=plt.gcf().transFigure)
-mortes = plt.text(0.60, 0.95, "total_deaths (predict) = %.2f"%(sum(y2)), fontsize=12, transform=plt.gcf().transFigure) 
+infectados_RMSE = plt.text(0.05, 0.93, "RMSE_inf = %.2f"%(RMSE_inf), fontsize=12, transform=plt.gcf().transFigure)
+
+mortes = plt.text(0.60, 0.95, "total_deaths (predict) = %.2f"%(sum(y2)), fontsize=12, transform=plt.gcf().transFigure)
+mortes_RMSE = plt.text(0.60, 0.93, "RMSE_dea = %.2f"%(RMSE_dea), fontsize=12, transform=plt.gcf().transFigure)
+ 
 func_text = plt.text(0.35, 0.95, "function: Gauss", fontsize=10, transform=plt.gcf().transFigure)
 
 
@@ -184,6 +194,12 @@ def update(val):#este val nao tem nada a ver com ...
 		gauss4 = gauss(x,a4,xo4,sigma4) 
 		D2.append(float(gauss4))
 		D.append(gauss3+gauss4)
+
+	
+	#Error
+	RMSE_inf = RMSE(y1,G)
+	RMSE_dea = RMSE(y2,D)
+
 	
 	g1.set_ydata(G1)
 	g2.set_ydata(G2)
@@ -194,9 +210,13 @@ def update(val):#este val nao tem nada a ver com ...
 	d.set_ydata(D)
 
 
-	#Texto
+	#Texto Pred
 	infectados.set_text("total_infected (predict) = %.2f"%sum(G))
 	mortes.set_text("total_deaths (predict) = %.2f"%sum(D))
+
+	#Texto Error
+	infectados_RMSE.set_text("RMSE_dea = %.2f"%(RMSE_inf))
+	mortes_RMSE.set_text("RMSE_dea = %.2f"%(RMSE_dea))
 
 	#Alterar Gráfico
 	plt.draw()
