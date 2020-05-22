@@ -1,6 +1,17 @@
 #fonte: https://www.youtube.com/watch?v=_9WiB2PDO7k&list=PLJ39kWiJXSixyRMcn3lrbv8xI8ZZoYNZU
 import streamlit as st
 
+
+# Autenticação minha
+login = st.text_input('User','...')
+password = st.text_input('Password','...')
+submit = st.button('Submit')
+if submit == True  and (login != 'Miguel' or password != '123'):
+    st.warning('User or Pass wrong')
+if submit and login == 'Miguel' and password == '123':
+    st.success('Logado')
+
+
 #Text/title
 st.title('Streamlit Tutorials')
 
