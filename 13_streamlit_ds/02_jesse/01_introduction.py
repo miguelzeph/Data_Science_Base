@@ -3,8 +3,10 @@ import streamlit as st
 
 
 # Autenticação minha
-login = st.text_input('User','...')
-password = st.text_input('Password','...')
+#login = st.text_input('User','...')# Por texto
+login = st.selectbox('User',['Miguel','Ana','Priscila'])
+#password = st.text_input('Password','...',type = 'password')
+password = st.text_input('Password',type = 'password')
 submit = st.button('Submit')
 if submit == True  and (login != 'Miguel' or password != '123'):
     st.warning('User or Pass wrong')
