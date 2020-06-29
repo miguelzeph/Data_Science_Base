@@ -92,7 +92,7 @@ if b:
 #text input
 firstname = st.text_input('Enter your First name','Type Here ...')
 
-if st.button('Submit'):
+if st.button('Submitttt'):
     result = firstname.title()
     st.success(result)
 
