@@ -40,6 +40,7 @@ st.help(print)
 # writing text
 st.write(range(10))
 
+'''
 #images Exemplo com URL
 from PIL import Image
 import requests
@@ -50,6 +51,8 @@ st.image(img, width = 500,caption='Coliseu')
 #exemplo sem URL
 #img = Image.open('nome.png')
 #st.image(img, width = 500,caption='Coliseu')
+'''
+
 
 #Videos
 vid_file = open('/home/miguel/Vídeos/miguel_lorentzmodel.mkv','rb').read()
